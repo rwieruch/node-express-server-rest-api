@@ -21,4 +21,20 @@ An easy way to get started with a Express server with Node.js.
 * `cd node-express-server`
 * `npm install`
 * `npm start`
-* include *.env* in your *.gitignore*
+
+### Routes
+
+* visit http://localhost:3000
+  * /messages
+  * /messages/1
+  * /users
+  * /users/1
+
+### Beyond GET Routes
+
+* Install [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop) to interact with REST API
+* Create a message with:
+  * URL: http://localhost:3000/messages
+  * Method: POST
+  * Body: raw + JSON (application/json)
+  * Body Content: `{ "text": "hi" }`
