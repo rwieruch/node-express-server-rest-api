@@ -51,20 +51,24 @@ app.use((req, res, next) => {
 
 // Routes
 
+app.get('/me', ({ me }, res) => {
+  return res.send(users[me.userId]);
+});
+
 app.get('/users', (req, res) => {
-  res.send(Object.values(users));
+  return res.send(Object.values(users));
 });
 
 app.get('/users/:userId', (req, res) => {
-  res.send(users[req.params.userId]);
+  return res.send(users[req.params.userId]);
 });
 
 app.get('/messages', (req, res) => {
-  res.send(Object.values(messages));
+  return res.send(Object.values(messages));
 });
 
 app.get('/messages/:messageId', (req, res) => {
-  res.send(messages[req.params.messageId]);
+  return res.send(messages[req.params.messageId]);
 });
 
 app.post('/messages', ({ body: { text }, me }, res) => {
@@ -78,7 +82,22 @@ app.post('/messages', ({ body: { text }, me }, res) => {
   messages[id] = message;
   users[me.id].messageIds.push(id);
 
-  res.send(message);
+  return res.send(message);
+});
+
+app.delete('/messages/:messageId', (req, res) => {
+  const {
+    [req.params.messageId]: message,
+    ...otherMessages
+  } = messages;
+
+  if (!message) {
+    return res.send(false);
+  }
+
+  messages = otherMessages;
+
+  return res.send(true);
 });
 
 app.listen(process.env.PORT, () =>

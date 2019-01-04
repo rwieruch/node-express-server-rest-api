@@ -22,7 +22,7 @@ An easy way to get started with a Express server with Node.js.
 * `npm install`
 * `npm start`
 
-### Routes
+### GET Routes
 
 * visit http://localhost:3000
   * /messages
@@ -32,9 +32,21 @@ An easy way to get started with a Express server with Node.js.
 
 ### Beyond GET Routes
 
-* Install [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop) to interact with REST API
+#### CURL
+
+* Create a message with:
+  * `curl -i -X POST -H "Content-Type:application/json" http://localhost:3000/messages -d '{"text":"Hi again, World"}'`
+* Delete a message with:
+  * `curl -i -X DELETE -H "Content-Type:application/json" http://localhost:3000/messages/1`
+
+#### Postman
+
+* Install [Postman](https://www.getpostman.com/apps) to interact with REST API
 * Create a message with:
   * URL: http://localhost:3000/messages
   * Method: POST
   * Body: raw + JSON (application/json)
-  * Body Content: `{ "text": "hi" }`
+  * Body Content: `{ "text": "Hi again, World" }`
+* Delete a message with:
+  * URL: http://localhost:3000/messages/1
+  * Method: DELETE
