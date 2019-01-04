@@ -44,7 +44,7 @@ let messages = {
 
 // Application-Level Middleware
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   req.me = users[1];
   next();
 });
