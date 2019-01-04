@@ -52,7 +52,7 @@ app.use((req, res, next) => {
 // Routes
 
 app.get('/me', ({ me }, res) => {
-  return res.send(users[me.userId]);
+  return res.send(users[me.id]);
 });
 
 app.get('/users', (req, res) => {
