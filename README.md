@@ -22,6 +22,7 @@ An easy way to get started with a Express server offering a REST API with Node.j
 * `cd node-express-server-rest-api`
 * `npm install`
 * `npm start`
+* optional: include *.env* in your *.gitignore*
 
 ### GET Routes
 
