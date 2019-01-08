@@ -6,26 +6,16 @@ import express from 'express';
 
 const app = express();
 
-app.use(cors());
-
-// Postman: x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Postman: raw + JSON (application/json)
-app.use(bodyParser.json());
-
 // Sample Data
 
 let users = {
   1: {
     id: '1',
     username: 'Robin Wieruch',
-    messageIds: [1],
   },
   2: {
     id: '2',
     username: 'Dave Davids',
-    messageIds: [2],
   },
 };
 
@@ -44,6 +34,11 @@ let messages = {
 
 // Application-Level Middleware
 
+app.use(cors());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
   req.me = users[1];
   next();
@@ -51,8 +46,8 @@ app.use((req, res, next) => {
 
 // Routes
 
-app.get('/me', ({ me }, res) => {
-  return res.send(users[me.id]);
+app.get('/me', (req, res) => {
+  return res.send(users[req.me.id]);
 });
 
 app.get('/users', (req, res) => {
@@ -71,16 +66,15 @@ app.get('/messages/:messageId', (req, res) => {
   return res.send(messages[req.params.messageId]);
 });
 
-app.post('/messages', ({ body: { text }, me }, res) => {
+app.post('/messages', (req, res) => {
   const id = uuidv4();
   const message = {
     id,
-    text: text,
-    userId: me.id,
+    text: req.body.text,
+    userId: req.me.id,
   };
 
   messages[id] = message;
-  users[me.id].messageIds.push(id);
 
   return res.send(message);
 });
@@ -91,13 +85,9 @@ app.delete('/messages/:messageId', (req, res) => {
     ...otherMessages
   } = messages;
 
-  if (!message) {
-    return res.send(false);
-  }
-
   messages = otherMessages;
 
-  return res.send(true);
+  return res.send(message);
 });
 
 app.listen(process.env.PORT, () =>
