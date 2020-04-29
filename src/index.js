@@ -8,12 +8,18 @@ import routes from './routes';
 
 const app = express();
 
-// Application-Level Middleware
+// * Application-Level Middleware * //
+
+// Third-Party Middleware
 
 app.use(cors());
 
+// Built-In Middleware
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Custom Middleware
 
 app.use((req, res, next) => {
   req.context = {
@@ -23,13 +29,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
+// * Routes * //
 
 app.use('/session', routes.session);
 app.use('/users', routes.user);
 app.use('/messages', routes.message);
 
-// Start
+// * Start * //
 
 app.listen(process.env.PORT, () =>
   console.log(`Example app listening on port ${process.env.PORT}!`),
