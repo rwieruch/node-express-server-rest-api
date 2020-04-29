@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 import express from 'express';
 
 import models from './models';
@@ -16,8 +15,8 @@ app.use(cors());
 
 // Built-In Middleware
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Custom Middleware
 
