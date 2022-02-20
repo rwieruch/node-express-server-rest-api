@@ -11,15 +11,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.9.5",
-    "nodemon": "^2.0.3"
+    "@babel/core": "^7.17.5",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "nodemon": "^2.0.15"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "uuid": "^7.0.3"
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "uuid": "^8.3.2"
   }
 }
