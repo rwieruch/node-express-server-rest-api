@@ -16,7 +16,7 @@ pipeline {
         stage('Build and test') {
             steps {
                 // Build your application artifact
-                sh 'npm install && npm startv'
+                sh 'npm install && npm start'
             }
         }
 
