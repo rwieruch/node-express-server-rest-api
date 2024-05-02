@@ -1,11 +1,21 @@
 pipeline {
     agent any
 
-      tools{
+    tools{
         nodejs 'node18'
     }
 
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+   
+
     stages {
+        stage('clean workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 // Check out the code from Git repository
@@ -13,7 +23,24 @@ pipeline {
             }
         }
 
-        stage('Dependencies') {
+
+        stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=vivo \
+                    -Dsonar.projectKey=vivo '''
+                }
+            }
+        }
+        stage("quality gate"){
+           steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'squ_aa89a6a07fbfba6bccdbe01d406fcbaef0c16729' 
+                }
+            } 
+        }
+
+        stage('Install Dependencies') {
             steps {
                 // Build your application artifact
                 sh 'npm install'
@@ -23,11 +50,11 @@ pipeline {
         stage("Docker Build & Push"){
             steps{
                 script{
-                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-                       sh "docker build -t zomato ."
-                       sh "docker tag zomato vamanrathod199/zomato:latest "
-                       sh "docker push vamanrathod199/zomato:latest "
-                    }
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker', url: 'https://hub.docker.com/'){   
+                       sh "docker build -t vivo ."
+                       sh "docker tag vivo vamanrathod199/vivo:latest "
+                       sh "docker push vamanrathod199/vivo:latest "
+                   }
                 }
             }
         }
