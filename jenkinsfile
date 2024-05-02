@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+      tools{
+        nodejs 'node18'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Check out the code from Git repository
+                git 'https://github.com/vamanrathod/node-express-server-rest-api'
+            }
+        }
+
+        stage('Build and test') {
+            steps {
+                // Build your application artifact
+                sh 'npm install && npm startv'
+            }
+        }
+
+    }
+}    
