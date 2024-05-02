@@ -13,10 +13,10 @@ pipeline {
             }
         }
 
-        stage('Build and test') {
+        stage('Dependencies') {
             steps {
                 // Build your application artifact
-                sh 'npm install && npm start'
+                sh 'npm install'
             }
         }
 
