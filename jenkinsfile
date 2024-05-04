@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SCANNER_HOME=tool 'sonar-scanner'
+        SCANNER_HOME=tool 'sonarqube'
     }
 
     stages {
@@ -19,26 +19,28 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Check out the code from Git repository
-                git 'https://github.com/vamanrathod/node-express-server-rest-api'
-            }
+              git credentialsId: 'github', url: 'https://github.com/deepikapwr/node-express-server-rest-api.git'
+            }  
         }
 
 
         stage("Sonarqube Analysis "){
             steps{
-                withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=vivo \
-                    -Dsonar.projectKey=vivo '''
+                withSonarQubeEnv('sonarqube') {
+                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=job \
+                    -Dsonar.projectKey=job '''
                 }
             }
         }
         stage("quality gate"){
-           steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'squ_aa89a6a07fbfba6bccdbe01d406fcbaef0c16729' 
+           when { expression { params.action == 'create'}}    
+            steps{
+                script{
+                    def credentialsId = 'sonarqube'
+                    qualityGate(credentialsId)
                 }
-            } 
-        }
+            }       
+        }    
 
         stage('Install Dependencies') {
             steps {
@@ -50,10 +52,10 @@ pipeline {
         stage("Docker Build & Push"){
             steps{
                 script{
-                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker', url: 'https://hub.docker.com/'){   
-                       sh "docker build -t vivo ."
-                       sh "docker tag vivo vamanrathod199/vivo:latest "
-                       sh "docker push vamanrathod199/vivo:latest "
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                       sh "docker build -t deepika ."
+                       sh "docker tag deepika dpka531/deepika:latest "
+                       sh "docker push dpka531/deepika:latest "
                    }
                 }
             }
@@ -61,4 +63,3 @@ pipeline {
 
     }
 } 
-
