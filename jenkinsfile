@@ -63,7 +63,7 @@ pipeline {
 
         stage('Deploy (Optional)') {
             steps {
-                sh 'cd node-express-server-rest-api/compose.yaml && docker-compose up -d'
+                sh 'cd compose.yaml && docker-compose up -d'
             }
         }
 
