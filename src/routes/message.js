@@ -35,4 +35,19 @@ router.delete('/:messageId', (req, res) => {
   return res.send(message);
 });
 
+router.put('/:messageId', (req, res) => {
+  const {
+    [req.params.messageId]: message
+  } = req.context.models.messages;
+
+  const updatedMessage = {
+    ...message,
+    text: req.body.text
+  };
+
+  req.context.models.messages[req.params.messageId] = updatedMessage;
+
+  return res.send(updatedMessage);
+})
+
 export default router;
