@@ -1,0 +1,71 @@
+pipeline {
+    agent any
+
+    tools{
+        nodejs 'node18'
+    }
+
+    environment {
+        SCANNER_HOME=tool 'sonarqube'
+    }
+
+    stages {
+        stage('clean workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                // Check out the code from Git repository
+              git credentialsId: 'github', url: 'https://github.com/deepikapwr/node-express-server-rest-api.git'
+            }  
+        }
+
+
+        stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonarqube') {
+                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=job \
+                    -Dsonar.projectKey=job '''
+                }
+            }
+        }
+        stage("quality gate"){
+           when { expression { params.action == 'create'}}    
+            steps{
+                script{
+                    def credentialsId = 'sonarqube'
+                    qualityGate(credentialsId)
+                }
+            }       
+        }    
+
+        stage('Install Dependencies') {
+            steps {
+                // Build your application artifact
+                sh 'npm install'
+            }
+        }
+
+        stage("Docker Build & Push"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                       sh "docker build -t deepika ."
+                       sh "docker tag deepika dpka531/deepika:latest "
+                       sh "docker push dpka531/deepika:latest "
+                   }
+                }
+            }
+        }
+
+        stage('Deploy (Optional)') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+
+    }
+} 

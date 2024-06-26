@@ -1,0 +1,5 @@
+services:
+  redis:
+    image: 'dpka531/deepika:latest'
+    ports:
+      - '4000:4000'   
